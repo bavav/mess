@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="styles/index.css">
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="scripts/nacl-fast.min.js"></script>
+    <script src="scripts/nacl.js"></script>
+    <script src="scripts/nacl-util.js"></script>
+    <script src="scripts/index.js"></script>
+    <meta charset="UTF-8" />
+    <title>Mss</title>
+</head>
+
+<body>
+    <div id="chatModal" class="modal-overlay">
+        <div class="modal-window">
+            <h2>Создание нового чата</h2>
+            <form id="chatForm">
+                <div class="form-group">
+                    <label for="chatName">Название чата *</label>
+                    <input type="text" id="chatName" name="chatName" required placeholder="Введите название чата">
+                </div>
+
+                <div class="form-group">
+                    <label for="participants">Участники</label>
+                    <input type="text" id="participants" placeholder="Введите id участников через запятую">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Описание чата</label>
+                    <textarea id="description" placeholder="Опишите тему чата..."></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeChatModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать чат</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="main">
+        <div id="chats">
+            
+        </div>
+        <div id="main_page">
+           <div style="display: flex; flex-direction: column; height: 100%; ">
+                
+                <!-- Область сообщений (занимает всё свободное место) -->
+                <div id="mss_block_id">
+                    <div class="mss_block">
+                        <img src="http://localhost:5000/static/uploads/default_avatar.png" class="chat_icon">
+                        
+                        <div class="mss">
+                            <p id="name">po</p>
+                            Coo<br>бщен<br>ие 1
+                        </div>
+                    </div>
+                    <div class="mss_block_slf">
+                        <div class="self_mss">Сообщение 2</div>
+                        <img src="http://localhost:5000/static/uploads/default_avatar.png" class="chat_icon_self">
+                    </div>
+                </div>
+
+                <!-- Строка ввода (всегда прижата к низу) -->
+                <div id="inputzone">
+                    <button id="addFile">Файл</button>
+                    <input id="inputsm" type="text" placeholder="Напишите сообщение..." width="50vw">
+                    <button id="sendbtn">Отправить</button>
+                </div>
+
+            </div>
+        </div>
+        <div id="info">
+            <div id="self_ava">
+
+            </div>
+            <div id="profile">
+                <div id="namep">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

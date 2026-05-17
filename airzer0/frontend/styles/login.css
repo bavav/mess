@@ -1,0 +1,350 @@
+/* Стили для вкладок */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.tab-btn:hover {
+    color: #333;
+}
+
+.tab-btn.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #007bff;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Обновлённые стили для drop-zone */
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: #f9f9f9;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+    border-color: #007bff;
+    background-color: #f0f7ff;
+}
+
+/* Кнопки */
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+/* edit */
+
+
+#main {
+    margin-left: 35vw;
+    margin-top: 35vh;
+    border-radius: 50px;
+    width: 20vw;
+    color: aliceblue;
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    padding: 5vmin;
+    border: 8px solid transparent;
+    background: linear-gradient(#212121) padding-box, 
+                /*linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet,blue,cyan,green,yellow,orange,red*/
+                linear-gradient(to right, #880808,#880808, #FF2400,#880808) border-box;
+    background-size: 500% 100%; 
+    align-items: center;
+  /* Не забудь поправить анимацию, чтобы она проходила весь путь */
+    animation: move 10s linear infinite; 
+}
+
+@keyframes move {
+  from { background-position: 0% 0%; }
+  to { background-position: 200% 0%; }
+}
+.drop-zone {
+  border: 2px dashed #666;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  transition: all 0.2s;
+  margin: 15px 0;
+  cursor: pointer;
+}
+
+.drop-zone.dragover {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.drop-zone p {
+  margin: 5px 0;
+  color: #999;
+}
+.modal {
+    color: aliceblue;
+    position: fixed;  /* fixed вместо absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;    /* вместо display: grid */
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);  /* затемнение фона */
+    z-index: 1000;    /* чтобы окно было поверх всего */
+}
+#cancel-load-btn {
+    width: 20vw;
+}
+.keym {
+    color: aliceblue;
+    height: 35vh;
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    padding: 5vmin;
+    border: 8px solid transparent;
+    background: linear-gradient(#880909,black) padding-box, 
+                linear-gradient(to right, #880909, black,#880909) border-box;
+    
+    background-size: 500% 100%; 
+    align-items: center;
+    
+    animation: move 50s linear infinite; 
+}
+.btn {
+    color: aliceblue;
+    border: 2px solid transparent;
+    border-radius: 50px;
+    background-image: linear-gradient(#000000, #b652a9), 
+                      linear-gradient(to right, var(--color-1), var(--color-2));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    opacity: 0.8;
+    transition: --color-1 0.4s ease, --color-2 0.4s ease;
+    cursor: pointer;
+}
+
+.btn:hover {
+    --color-1: black;
+    --color-2: #880808;
+}
+/* Toast уведомления */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    z-index: 2000;
+    animation: slideIn 0.3s ease-out;
+    max-width: 300px;
+    word-wrap: break-word;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.toast-success {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    border-left: 4px solid #2e7d32;
+}
+
+.toast-error {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    border-left: 4px solid #b71c1c;
+}
+
+.toast-warning {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    border-left: 4px solid #e65100;
+}
+
+.toast-info {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    border-left: 4px solid #0d47a1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast-hide {
+    animation: slideOut 0.3s ease-in forwards;
+}
+html, body {
+    margin: 0;
+    min-height: 60vh; /* 100% высоты видимой части экрана */
+}
+
+body {
+    background: linear-gradient(#880909,black) padding-box, 
+                linear-gradient(to right, #880909, black,#880909) border-box;
+    
+    background: radial-gradient(
+        circle at 100%,
+        #7e0049,
+        #880909c4 50%,
+        #880909 75%,
+        #6b0000 77.5%,
+        #311a1a 80%
+    );
+    background-attachment: fixed;
+}
+#logini {
+    color: aliceblue;
+    width: 20vh;
+    margin-bottom: 5vh;
+    padding: 10px 20px;
+    border-radius: 50px;
+    
+    /* Делаем прозрачную границу, чтобы освободить место под градиент */
+    border: 2px solid transparent;
+    
+    /* Магия: первый фон — белый внутри, второй — градиент для рамки */
+    background-image: linear-gradient(#880808,black), 
+                      linear-gradient(to right, #880808, rgb(42, 0, 0));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+
+    outline: none;
+    transition: all 0.4s ease; /* Плавность */
+    opacity: 0.8; /* Начальное состояние */
+}
+
+#logini:focus {
+    width: 20vh;
+    opacity: 1;
+    /* Можно добавить свечение для эффекта */
+    box-shadow: 0 2px 4px #880808, /* Жёлтый цвет */ 0 6px 10px rgba(41, 0, 0, 0.548); /* Зелёный цвет */ 
+}
+
+#passwi {
+    color: aliceblue;
+    width: 20vh;
+    margin-bottom: 5vh;
+    padding: 10px 20px;
+    border-radius: 50px;
+    
+    /* Делаем прозрачную границу, чтобы освободить место под градиент */
+    border: 2px solid transparent;
+    
+    /* Магия: первый фон — белый внутри, второй — градиент для рамки */
+    background-image: linear-gradient(#880808,black), 
+                      linear-gradient(to right, #880808, rgb(42, 0, 0));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+
+    outline: none;
+    transition: all 0.4s ease; /* Плавность */
+    opacity: 0.8; /* Начальное состояние */
+}
+
+#passwi:focus {
+    width: 20vh;
+    opacity: 1;
+    /* Можно добавить свечение для эффекта */
+    box-shadow: 0 2px 4px #880808, /* Жёлтый цвет */ 0 6px 10px rgba(41, 0, 0, 0.548); /* Зелёный цвет */ 
+}
+@property --color-1 {
+  syntax: '<color>';
+  initial-value: #880808;
+  inherits: false;
+}
+
+@property --color-2 {
+  syntax: '<color>';
+  initial-value: black;
+  inherits: false;
+}
+
+#confirm {
+    color: aliceblue;
+    border: 2px solid transparent;
+    border-radius: 50px;
+    background-image: linear-gradient(#000000, #b652a9), 
+                      linear-gradient(to right, var(--color-1), var(--color-2));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    opacity: 0.8;
+    transition: --color-1 0.4s ease, --color-2 0.4s ease;
+    cursor: pointer;
+}
+
+#confirm:hover {
+    --color-1: black;
+    --color-2: #880808;
+}
+
+#confirmreg {
+    color: aliceblue;
+    border: 2px solid transparent;
+    border-radius: 50px;
+    background-image: linear-gradient(#000000, #b652a9), 
+                      linear-gradient(to right, var(--color-1), var(--color-2));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    opacity: 0.8;
+    transition: --color-1 0.4s ease, --color-2 0.4s ease;
+    cursor: pointer;
+}
+
+#confirmreg:hover {
+    --color-1: black;
+    --color-2: #880808;
+}

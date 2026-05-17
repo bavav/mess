@@ -1,0 +1,7 @@
+**/.vscode/*
+**/static/uploads/*
+**/__pycache__/*
+*.db
+fiveserver.config.js
+**/.venv/**
+.env
