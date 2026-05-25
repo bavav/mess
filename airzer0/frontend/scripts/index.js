@@ -27,7 +27,12 @@ function saveFileMetadata(blobHash, metadata) {
     }
 }
 
-function getFileMetadata(blobHash) {
+async function getFileMetadata(blobHash) {
+    if (!fileMetadataCache[blobHash]) {
+        const result = await decryptBlob(blobHash);
+        saveFileMetadata(blobHash,result.metadata)
+    };
+    
     return fileMetadataCache[blobHash] || null;
 }
 
@@ -807,7 +812,7 @@ async function sendMessage() {
     
     if (!txt.trim() && currentAttachments.length === 0) return;
     
-    field.value = `op`;
+    field.value = "";
     
     try {
         const chatKey = nacl.util.decodeBase64(await getChatKey(getChatId()));
@@ -848,6 +853,10 @@ async function sendMessage() {
 
 async function reloadMyProfile() {
     profileState = { type: 'self', data: null };
+    await renderProfilePanel();
+}
+async function reloadProfile() {
+    
     await renderProfilePanel();
 }
 
@@ -935,7 +944,7 @@ async function renderProfilePanel() {
                 right: 5px;
                 width: 24px;
                 height: 24px;
-                background: rgba(255, 0, 0, 0.3);
+                background: rgba(255, 0, 0, 0.43);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
@@ -978,16 +987,7 @@ async function renderProfilePanel() {
                                 object-fit: cover;
                                 border: 2px solid #00eeff;
                             ">
-                            <div style="
-                                position: absolute;
-                                bottom: 0;
-                                right: 0;
-                                width: 16px;
-                                height: 16px;
-                                background: #4CAF50;
-                                border-radius: 50%;
-                                border: 2px solid #1a1a1a;
-                            "></div>
+                           
                         </button>
                     `;
                     
@@ -1012,44 +1012,65 @@ async function renderProfilePanel() {
             
         case 'chat':
             // Профиль чата
-            const chat = profileState.data;
-            avatarHtml = `
-                <div style="
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 50%;
-                    background: linear-gradient(135deg, #00eeff, #0066ff);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 24px;
-                    border: 2px solid #00eeff;
-                    color: white;
-                    font-weight: bold;
-                ">#</div>
-            `;
+            const chat2 = profileState.data;
+            try {
+                const response = await fetch('/api/v1/chats/' + chat2.id, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const chat = await response.json();
             
-            profileHtml = `
-                <p id="profile_name" style="
-                    margin: 0;
-                    font-weight: bold;
-                    color: white;
-                    font-size: 14px;
-                ">${escapeHtml(chat.name)}</p>
-                <p id="profile_status" style="
-                    margin: 2px 0 0 0;
-                    color: #888;
-                    font-size: 11px;
-                ">${chat.participants_count} участников</p>
-                <p style="
-                    margin: 2px 0 0 0;
-                    color: #666;
-                    font-size: 10px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                ">${escapeHtml(chat.desk || '')}</p>
-            `;
+                    avatarHtml = `
+                        
+                        <button id="chat_profile_avatar" style="
+                            background: none;
+                            border: none;
+                            padding: 0;
+                            cursor: pointer;
+                            position: relative;
+                        ">
+                            <img src="${chat.avatar_url}" class="profile_avatar" style="
+                                width: 48px;
+                                height: 48px;
+                                border-radius: 50%;
+                                object-fit: cover;
+                                border: 2px solid #00eeff;
+                            ">
+                           
+                        </button>
+                    `;
+                    
+                    profileHtml = `
+                        <p id="profile_name" style="
+                            margin: 0;
+                            font-weight: bold;
+                            color: white;
+                            font-size: 14px;
+                        ">${escapeHtml(chat.name)}</p>
+                        <p id="profile_status" style="
+                            margin: 2px 0 0 0;
+                            color: #888;
+                            font-size: 11px;
+                        ">${chat.participants} участников</p>
+                        <p style="
+                            margin: 2px 0 0 0;
+                            color: #666;
+                            font-size: 10px;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        ">${escapeHtml(chat.desk || '')}</p>
+                    `;
+                    
+                }
+            } catch (error) {
+                console.error('Failed to load self profile:', error);
+            }
             break;
             
         case 'user':
@@ -1104,13 +1125,40 @@ async function renderProfilePanel() {
             });
         }
     }
-    
+    await setchatavaupl();
     // Обработчик клика по аватарке (для self — смена аватарки)
     if (profileState.type === 'self') {
         setupAvatarUpload();
     }
 }
+async function setchatavaupl() {
+    const avatarBtn = document.querySelector('#chat_profile_avatar');
+    if (!avatarBtn) return;
+    
+    // Удаляем старый input
+    const oldInput = document.querySelector('#hidden-chat-avatar-input');
+    if (oldInput) oldInput.remove();
+    
+    const fileInput = document.createElement('input');
+    fileInput.id = 'hidden-chat-avatar-input';
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+    
+    avatarBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        
 
+        await setChatAvatar(files[0]);
+        fileInput.value = '';
+    });
+}
 function setupAvatarUpload() {
     const avatarBtn = document.querySelector('#self_profile_avatar');
     if (!avatarBtn) return;
@@ -1675,8 +1723,35 @@ async function setAvatar(file) {
     await reloadChat(getChatId());
 }
 
-// Модальное окно для превью файлов перед отправкой
-// index.js — обновить функцию showFilePreviewModal
+async function setChatAvatar(file) { 
+    const formData = new FormData();
+    formData.append('user_id', getUserId()); 
+    formData.append('file', file);
+    formData.append('chat_id', getChatId()); 
+    
+    try {
+        showNotification(`Загрузка ${file.name}...`, 'info');
+        
+        const response = await fetch('/api/v1/setChatAvatar', { 
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+
+            }
+        });
+        
+        if (!response.ok) throw new Error('Upload failed');
+        
+        const result = await response.json(); 
+        reloadProfile()
+    } catch (error) {
+        console.error('Upload error:', error);
+        showNotification(`Ошибка загрузки ${file.name}`, 'error');
+    }
+    await reloadChat(getChatId());
+}
+
 
 function showFilePreviewModal(files) {
     // Удаляем старую модалку если есть
@@ -1897,8 +1972,8 @@ async function encryptFileForUpload(file, chatKey) {
         throw new Error('Unsupported file format: ' + typeof file);
     }
     
-    // Паддинг до 1MB
-    const CHUNK_SIZE = 1024 * 1024;
+    // Паддинг до 1КБ
+    const CHUNK_SIZE = 1024;
     const paddedSize = Math.ceil(fileBytes.length / CHUNK_SIZE) * CHUNK_SIZE;
     const padded = new Uint8Array(paddedSize);
     padded.set(fileBytes);
@@ -1990,7 +2065,7 @@ async function renderMessage(ms) {
     
     // Новый формат
     if (!messageObj.type || messageObj.type === 'message') {
-        return renderRichMessage(ms, messageObj, isSelf, chatKey);
+        return await renderRichMessage(ms, messageObj, isSelf, chatKey);
     }
     
     // Для неизвестных типов — показываем как текст
@@ -2031,7 +2106,7 @@ function renderSimpleMessage(ms, text, isSelf) {
     }
 }
 
-function renderRichMessage(ms, messageObj, isSelf, chatKey) {
+async function renderRichMessage(ms, messageObj, isSelf, chatKey) {
     let textHtml = '';
     if (messageObj.text) {
         textHtml = `<div class="message-content">${escapeHtml(messageObj.text)}</div>`;
@@ -2042,11 +2117,11 @@ function renderRichMessage(ms, messageObj, isSelf, chatKey) {
         attachmentsHtml = '<div class="attachments">';
         
         for (const att of messageObj.attachments) {
-            const meta = getFileMetadata(att.blob_hash) || att.metadata || {};
+            const meta = await getFileMetadata(att.blob_hash) || att.metadata || {};
             const mimeType = meta.mime_type || meta.mimeType || 'application/octet-stream';
             const name = meta.original_name || meta.originalName || 'file.bin';
             const size = meta.original_size || meta.originalSize || 0;
-            
+            console.log(await getFileMetadata(att.blob_hash));
             if (mimeType.startsWith('image/')) {
                 attachmentsHtml += `
                     <div class="attachment-image">
@@ -2075,6 +2150,7 @@ function renderRichMessage(ms, messageObj, isSelf, chatKey) {
                     </div>
                 `;
             } else {
+                
                 attachmentsHtml += `
                     <div class="attachment-file">
                         <div style="padding: 8px; border: 1px solid #444; border-radius: 8px; margin: 4px;">

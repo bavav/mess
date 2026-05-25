@@ -35,7 +35,7 @@ class User(db.Model):
     login: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     registered_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
-    avatar_filename: Mapped[str] = mapped_column(String(255), server_default="default_avatar.png")
+    avatar_filename: Mapped[str] = mapped_column(String(255), server_default="default_avatar.webp")
     desk: Mapped[str] = mapped_column(String(255), server_default="...")
     public_key: Mapped[str] = mapped_column(String(48), nullable=False)
     titules: Mapped[List[str]] = mapped_column(JSON, server_default='[]')
@@ -62,7 +62,7 @@ class Chat(db.Model):
     name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
     started_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     created_by: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
-    avatar_filename: Mapped[str] = mapped_column(String(255), server_default="default_avatar.png", nullable=True)
+    avatar_filename: Mapped[str] = mapped_column(String(255), server_default="default_avatar.webp", nullable=True)
     desk: Mapped[str] = mapped_column(String(255), server_default="G.O.A.Ts")
     key_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     creator: Mapped['User'] = relationship(

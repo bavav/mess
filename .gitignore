@@ -5,3 +5,7 @@
 fiveserver.config.js
 **/.venv/**
 .env
+
+backend/static/avas/
+
+backend/static/blobs/

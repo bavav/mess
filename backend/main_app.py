@@ -386,6 +386,92 @@ def upload_avas():
         print(f"Upload error: {e}")
         print(traceback.format_exc())
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/api/v1/setChatAvatar', methods=['POST'])
+def upload_avas_ch():
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file part'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
+        
+        if not allowed_file(file.filename):
+            return jsonify({'error': 'File type not allowed'}), 400
+        
+        token = request.headers.get('Authorization').split(" ")[1] 
+        data2 = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        
+        if str(request.form["user_id"]) != str(data2['user_id']):
+            return jsonify({"msg": "notoken"}), 400
+        
+        original_filename = file.filename
+        
+        # Сохраняем временно оригинал
+        temp_path = os.path.join(app.config['AVAS_FOLDER'], f"temp_{uuid.uuid4().hex}")
+        file.save(temp_path)
+        
+        # Определяем формат исходного файла
+        with Image.open(temp_path) as img:
+            original_format = img.format
+            supports_transparency = img.mode in ('RGBA', 'LA', 'P')
+        
+        # Параметры аватара
+        AVATAR_SIZE = 500
+        
+        # Создаем квадратную версию (с прозрачностью если поддерживается)
+        use_transparent = supports_transparency and original_format in ['PNG', 'WEBP']
+        square_avatar, used_transparency = make_square_with_padding_transparent(
+            temp_path, 
+            target_size=AVATAR_SIZE, 
+            use_transparent=use_transparent
+        )
+        
+        # Определяем формат сохранения
+        if used_transparency:
+            # Сохраняем с прозрачностью
+            save_format = 'PNG' if original_format == 'PNG' else 'WEBP'
+            ext = 'png' if save_format == 'PNG' else 'webp'
+            unique_filename = f"{uuid.uuid4().hex}.{ext}"
+            final_path = os.path.join(app.config['AVAS_FOLDER'], unique_filename)
+            
+            # Сохраняем с оптимизацией
+            if save_format == 'PNG':
+                square_avatar.save(final_path, 'PNG', optimize=True)
+            else:
+                square_avatar.save(final_path, 'WEBP', quality=85, method=6)
+        else:
+            # Сохраняем как JPEG с полями подобранного цвета
+            ext = 'jpg'
+            unique_filename = f"{uuid.uuid4().hex}.{ext}"
+            final_path = os.path.join(app.config['AVAS_FOLDER'], unique_filename)
+            square_avatar.save(final_path, 'JPEG', quality=85, optimize=True)
+        
+        # Удаляем временный файл
+        os.remove(temp_path)
+        
+        file_url = url_for('static', filename=f'avas/{unique_filename}')
+        user = db.session.get(Chat, request.form["chat_id"])
+        user.avatar_filename = unique_filename
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'file_url': file_url,
+            'preview_url': file_url,
+            'file_type': 'image',
+            'file_name': original_filename,
+            'file_size': os.path.getsize(final_path),
+            'has_transparency': used_transparency
+        }), 200
+        
+    except Exception as e:
+        print(f"Upload error: {e}")
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/v1/users/reg', methods=['POST'])
 def create_user():
     try:
@@ -526,7 +612,7 @@ def send_message(chat_id: int):
             user_login=user.login if user else None,
             user=user,
             nonce = data["nonce"],
-            attachments=data.get('attachments', [])  # Добавляем вложения
+            
         )
         
         db.session.add(message)
@@ -536,7 +622,7 @@ def send_message(chat_id: int):
         if avatar_filename:
             avatar_url = url_for('static', filename=f'avas/{avatar_filename}')
         else:
-            avatar_url = url_for('static', filename='default_avatar.png')
+            avatar_url = url_for('static', filename='default_avatar.webp')
         
         # Отправляем через сокет с вложениями
         socketio.emit('message', {
@@ -548,14 +634,14 @@ def send_message(chat_id: int):
             "message_id": message.id,
             'login': user.login,
             'nonce': data["nonce"],
-            'attachments': data.get('attachments', [])  # Добавляем
+            
         })
         
         return jsonify({
             'id': message.id,
             'content': message.content,
             'sent_at': message.sent_at.isoformat(),
-            'attachments': message.attachments
+            
         }), 201
     except Exception as e:
         db.session.rollback()
@@ -658,7 +744,7 @@ def get_messages(chat_id: int):
             if avatar_filename:
                 avatar_url = url_for('static', filename=f'avas/{avatar_filename}')
             else:
-                avatar_url = url_for('static', filename='default_avatar.png')
+                avatar_url = url_for('static', filename='default_avatar.webp')
             
             d.append({
                 'id': m.id,
@@ -670,8 +756,8 @@ def get_messages(chat_id: int):
                 "nonce": m.nonce,
                 'avatar_url': avatar_url,
                 'sent_at': m.sent_at.isoformat(),
-                'reactions': [{'reaction': r.reaction, 'user': r.user.login} for r in m.reactions],
-                'attachments': m.attachments or []
+                'reactions': [{'reaction': r.reaction, 'user': r.user.login} for r in m.reactions]
+                
             })
         d.reverse()
         print(d)
@@ -703,9 +789,9 @@ def get_user_chats(user_id: int):
         for c in chats:
             avatar_filename = getattr(c, 'avatar_filename', None)
             if avatar_filename:
-                avatar_url = url_for('static', filename=f'uploads/{avatar_filename}')
+                avatar_url = url_for('static', filename=f'avas/{avatar_filename}')
             else:
-                avatar_url = url_for('static', filename='default_avatar.png')
+                avatar_url = url_for('static', filename='default_avatar.webp')
             
             result.append({
                 'id': c.id,
@@ -734,13 +820,13 @@ def get_user(user_id: int):
             if avatar_filename:
                 avatar_url = url_for('static', filename=f'avas/{avatar_filename}')
             else:
-                avatar_url = url_for('static', filename='default_avatar.png')
+                avatar_url = url_for('static', filename='default_avatar.webp')
             return jsonify({
                     'id': user.id,
                     'name': user.login or f"USer {user.id}",
                     'desk': getattr(user, 'desk', "No description"),
                     'avatar_url': avatar_url,
-                    'status': getattr(user, 'status', "Вроде существует"),
+                    'status': getattr(user, 'titules', "Вроде существует"),
                     'lifetime': datetime.fromtimestamp(datetime.now().timestamp() - user.registered_at.timestamp()).isoformat()
                 }), 200
         else:
@@ -749,6 +835,34 @@ def get_user(user_id: int):
                 }), 432
     except Exception as e:
         print(f"Get user chats error: {e}")
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/v1/chats/<int:chat_id>', methods=['GET'])
+def get_chat(chat_id: int):
+    try:
+        
+        chat = db.session.get(Chat, chat_id)
+        if chat:
+            avatar_filename = getattr(chat, 'avatar_filename', None)
+            if avatar_filename:
+                avatar_url = url_for('static', filename=f'avas/{avatar_filename}')
+            else:
+                avatar_url = url_for('static', filename='default_avatar.webp')
+            return jsonify({
+                    'id': chat.id,
+                    'name': chat.name or f"CHat {chat.id}",
+                    'desk': getattr(chat, 'desk', "No description"),
+                    'avatar_url': avatar_url,
+                    'lifetime': getattr(chat, 'started_at', "Вовремя"),
+                    "participants" : len(chat.participants) or -1
+                }), 200
+        else:
+            return jsonify({
+                    "error":"chatNotFound"
+                }), 432
+    except Exception as e:
+        print(f"Get chat error: {e}")
         print(traceback.format_exc())
         return jsonify({'error': str(e)}), 500
 
