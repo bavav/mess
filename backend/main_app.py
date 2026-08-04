@@ -495,7 +495,7 @@ def create_user():
             app.config['SECRET_KEY'],
             algorithm='HS256'
         )
-        return jsonify({'id': user.id, 'login': user.login, "token": token}), 201
+        return jsonify({'id': user.id, 'login': user.login, "token": token}), 200
     except Exception as e:
         db.session.rollback()
         print(f"Registration error: {e}")
