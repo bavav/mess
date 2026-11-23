@@ -1,0 +1,90 @@
+ .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #121212;
+  }
+  
+  .login-card {
+    background: #1e1e1e;
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .login-title {
+    text-align: center;
+    color: #00eeff;
+    font-size: 32px;
+    margin-bottom: 30px;
+    font-weight: 300;
+    letter-spacing: 4px;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .login-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #e0e0e0;
+    font-size: 14px;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+  
+  .login-input:focus {
+    outline: none;
+    border-color: #00eeff;
+  }
+  
+  .login-input::placeholder {
+    color: #666;
+  }
+  
+  .login-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .login-buttons .btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .login-buttons .btn-primary {
+    background: #00eeff;
+    color: #121212;
+  }
+  
+  .login-buttons .btn-primary:hover {
+    background: #00d4e6;
+  }
+  
+  .login-buttons .btn-secondary {
+    background: #333;
+    color: #e0e0e0;
+  }
+  
+  .login-buttons .btn-secondary:hover {
+    background: #444;
+  }
+  
+  .login-buttons .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
