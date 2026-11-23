@@ -1,0 +1,227 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #1a1a2e;
+    height: 100%;
+    overflow: hidden;
+}
+
+.app-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+/* === КОМПАКТНАЯ ВЕРХНЯЯ ПАНЕЛЬ === */
+.resources-bar {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 20;
+}
+
+/* Вариант 1: Горизонтальная прокрутка (рекомендую для 4+ ресурсов) */
+.resources-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    /* Скрываем скроллбар, но оставляем возможность прокрутки */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.resources-scroll::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+}
+
+.resources-grid {
+    display: inline-flex;
+    gap: 8px;
+    padding: 0 4px;
+}
+
+/* Компактная карточка ресурса */
+.resource-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px 12px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    white-space: nowrap;
+}
+
+.resource-icon {
+    font-size: 18px;
+}
+
+.resource-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.resource-label {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 2px;
+}
+
+.add-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+}
+
+/* Вариант 2: Сетка 2x2 (альтернатива) - можно раскомментировать */
+/*
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+.resource-item {
+    justify-content: space-between;
+    padding: 6px 12px;
+}
+*/
+
+/* Область контента */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.page {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Нижняя панель */
+.bottom-tab-bar {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 6px 12px;
+    position: relative;
+    z-index: 10;
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .bottom-tab-bar {
+        padding-bottom: calc(6px + env(safe-area-inset-bottom));
+    }
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 4px 0;
+    border-radius: 12px;
+    color: #8e8e93;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+}
+
+.tab-icon {
+    font-size: 22px;
+}
+
+.tab-label {
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.tab-item.active {
+    color: #ffd700;
+}
+
+/* Игровые карточки */
+.game-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.game-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 6px;
+}
+
+.game-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+}
+
+.action-btn {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: #1a1a2e;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+}
+
+/* Индикатор прокрутки (подсказка) */
+.scroll-hint {
+    text-align: center;
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 4px;
+    letter-spacing: 2px;
+}

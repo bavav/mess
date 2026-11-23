@@ -9,3 +9,7 @@ fiveserver.config.js
 backend/static/avas/
 
 backend/static/blobs/
+airzer0/backend/static/*
+cards/backend/static/*
+
+node_modules/*

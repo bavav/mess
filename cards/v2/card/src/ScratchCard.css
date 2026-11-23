@@ -1,0 +1,192 @@
+.scratch-card-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.scratch-start-screen {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.scratch-preview h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.scratch-preview p {
+  color: #666;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.scratch-start-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.scratch-start-btn:active {
+  transform: scale(0.95);
+}
+
+.scratch-header {
+  margin-bottom: 20px;
+}
+
+.progress-info {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.success-badge {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.canvas-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Нижний слой с изображением */
+.image-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Верхний canvas для стирания */
+.scratch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.scratch-canvas.revealed {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.scratch-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  background: rgba(0,0,0,0.6);
+  padding: 5px;
+  border-radius: 20px;
+  width: fit-content;
+  margin: 0 auto;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.scratch-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.reset-btn {
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.reset-btn:active {
+  transform: scale(0.95);
+  background: #e0e0e0;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .scratch-card-container {
+    padding: 15px;
+  }
+  
+  .scratch-start-btn {
+    padding: 12px 30px;
+    font-size: 16px;
+  }
+  
+  .progress-label {
+    font-size: 12px;
+  }
+  
+  .scratch-hint {
+    font-size: 10px;
+  }
+}

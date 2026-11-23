@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Cards</title>
+    <link rel='stylesheet' href='styles/index.css'>
+    <script src="scripts/index.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="resources-bar">
+            <div class="resources-scroll">
+                <div class="resources-grid">
+                    <!-- Ресурс 1 -->
+                    <div class="resource-item">
+                        <span class="resource-icon">🪙</span>
+                        <span class="resource-value" id="coin-amount">1250</span>
+                        <span class="resource-label"></span>
+                        <button class="add-btn" data-resource="coins">+</button>
+                    </div>
+                    <!-- Ресурс 2 -->
+                    <div class="resource-item">
+                        <span class="resource-icon">💎</span>
+                        <span class="resource-value" id="diamond-amount">85</span>
+                        <button class="add-btn" data-resource="diamonds">+</button>
+                    </div>
+                    <!-- Ресурс 3 -->
+                    <div class="resource-item">
+                        <span class="resource-icon">⚡</span>
+                        <span class="resource-value" id="energy-amount">120/150</span>
+                        <button class="add-btn" data-resource="energy">+</button>
+                    </div>
+                    <!-- Ресурс 4 -->
+                    <div class="resource-item">
+                        <span class="resource-icon">⭐</span>
+                        <span class="resource-value" id="exp-amount">3</span>
+                        <span class="resource-label">ур.</span>
+                        <button class="add-btn" data-resource="exp">+</button>
+                    </div>
+                    <!-- Ресурс 5 (дополнительный пример) -->
+                    <div class="resource-item">
+                        <span class="resource-icon">🏆</span>
+                        <span class="resource-value" id="trophy-amount">42</span>
+                        <span class="resource-label">рейтинг</span>
+                        <button class="add-btn" data-resource="trophy">+</button>
+                    </div>
+                    <!-- Ресурс 6 -->
+                    <div class="resource-item">
+                        <span class="resource-icon">🎫</span>
+                        <span class="resource-value" id="ticket-amount">3</span>
+                        <span class="resource-label">билета</span>
+                        <button class="add-btn" data-resource="ticket">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-hint">← → листайте для просмотра всех ресурсов</div>
+        </div>
+        <div class="content">
+            <!-- Страница 1: Главная -->
+            <div id="home" class="page active">
+                <div class="card">
+                    <h2>🏠 Главная</h2>
+                    <p>Добро пожаловать! Это контент главной вкладки.</p>
+                    <p style="margin-top: 12px;">✅ Панель внизу НЕ перекрывается адресной строкой браузера.</p>
+                </div>
+                <div class="card">
+                    <h3>Как это работает?</h3>
+                    <p>• Используется <strong>position: fixed</strong> на контейнере<br>
+                    • Панель вкладок привязана к низу окна браузера<br>
+                    • Учтены safe-area-inset для iPhone с вырезом<br>
+                    • Контент скроллится независимо</p>
+                </div>
+                <div class="card">
+                    <h3>Длинный контент для проверки скролла</h3>
+                    <p>Прокрутите эту область — панель вкладок останется внизу экрана, а адресная строка сверху скроется при скролле (если браузер позволяет).</p>
+                    <p style="margin-top: 8px;">📱 Строка 1</p>
+                    <p>📱 Строка 2</p>
+                    <p>📱 Строка 3</p>
+                    <p>📱 Строка 4</p>
+                    <p>📱 Строка 5</p>
+                </div>
+            </div>
+
+            <!-- Страница 2: Поиск -->
+            <div id="search" class="page">
+                <div class="card">
+                    <h2>🔍 Поиск</h2>
+                    <p>Здесь будет поиск или список рекомендаций.</p>
+                </div>
+                <div class="card">
+                    <p>Популярные запросы: <br> • Дизайн <br> • Веб-разработка <br> • UI/UX</p>
+                </div>
+            </div>
+
+            <!-- Страница 3: Уведомления -->
+            <div id="notifications" class="page">
+                <div class="card">
+                    <h2>🔔 Уведомления</h2>
+                    <p>У вас нет новых уведомлений.</p>
+                </div>
+                <div class="card">
+                    <p>Здесь будут отображаться важные события и обновления.</p>
+                </div>
+            </div>
+
+            <!-- Страница 4: Профиль -->
+            <div id="profile" class="page">
+                <div class="card">
+                    <h2>👤 Профиль</h2>
+                    <p>Имя: Гость<br>Email: guest@example.com</p>
+                </div>
+                <div class="card">
+                    <p>Настройки и информация о вашем аккаунте.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижняя панель вкладок -->
+        <div class="bottom-tab-bar">
+            <button class="tab-item active" data-tab="home">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-label">Главная</span>
+            </button>
+            <button class="tab-item" data-tab="tops">
+                <span class="tab-icon">🏆</span>
+                <span class="tab-label">Топы</span>
+            </button>
+            <button class="tab-item" data-tab="shop">
+                <span class="tab-icon">🛒</span>
+                <span class="tab-label">Магазин</span>
+            </button>
+            <button class="tab-item" data-tab="collection">
+                <span class="tab-icon">✨</span>
+                <span class="tab-label">Коллекция</span>
+            </button>
+            <button class="tab-item" data-tab="profile">
+                <span class="tab-icon">👤</span>
+                <span class="tab-label">Профиль</span>
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

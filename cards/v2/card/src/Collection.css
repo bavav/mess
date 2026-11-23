@@ -1,0 +1,802 @@
+/* Collection.css - Оптимизировано для мобильных */
+
+/* Общие стили */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-collection {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Адаптивная сетка */
+.cards-grid-mobile {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .cards-grid-mobile {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  
+  .card-collection {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-grid-mobile {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+}
+
+/* Стили карточки-пазла */
+.card-puzzle {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1a2e;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.card-puzzle:active {
+  transform: scale(0.98);
+}
+
+.card-puzzle-inner {
+  aspect-ratio: 3/4;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-preload-image {
+  display: none;
+}
+
+.puzzle-grid {
+  display: grid;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.puzzle-piece {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.piece--owned {
+  box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.piece--missing {
+  backdrop-filter: blur(2px);
+}
+
+.piece-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  z-index: 2;
+}
+
+.piece-number {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1px 3px;
+  border-radius: 3px;
+}
+
+.card-puzzle-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  padding: 20px 12px 8px;
+  z-index: 3;
+}
+
+.card-puzzle-name {
+  margin: 0;
+  font-size: 14px;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.card-puzzle-vers {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+}
+
+.progress-bar-mobile {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  z-index: 4;
+}
+
+.progress-fill-mobile {
+  height: 100%;
+  background: #4caf50;
+  transition: width 0.3s ease;
+}
+
+.progress-text-mobile {
+  position: absolute;
+  right: 4px;
+  top: -16px;
+  font-size: 10px;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
+
+.card-puzzle-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.overlay-content {
+  text-align: center;
+}
+
+.overlay-percent {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+.overlay-text {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Стили для режима проявления */
+.card-reveal {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1a2e;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.reveal-inner {
+  aspect-ratio: 3/4;
+  position: relative;
+}
+
+.reveal-base-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.3s ease;
+}
+
+.reveal-fragments {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.reveal-fragment {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.reveal-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  padding: 20px 12px 8px;
+  z-index: 3;
+  color: white;
+}
+
+/* Хедер и статистика */
+.collection-header {
+  margin-bottom: 20px;
+}
+
+.collection-header h1 {
+  font-size: 24px;
+  margin: 0 0 16px 0;
+  color: #1a1a2e;
+}
+
+.stats-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 12px 16px;
+  border-radius: 12px;
+  flex: 1;
+  text-align: center;
+  color: white;
+}
+
+.stat-value {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.view-toggle {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.view-toggle:active {
+  background: #5a6fd6;
+}
+
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: #1a1a2e;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0 0 8px;
+  color: white;
+  font-size: 20px;
+}
+
+.modal-rarity {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.modal-card-preview {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.preview-image {
+  width: 100%;
+  display: block;
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.preview-fragment {
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.preview-fragment.owned {
+  box-shadow: inset 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.fragment-missing-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+}
+
+.fragment-number {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  font-size: 6px;
+  color: white;
+  background: rgba(0,0,0,0.7);
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* Состояния загрузки */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.error-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Touch-оптимизация для мобильных */
+@media (hover: none) {
+  .card-puzzle:hover,
+  .card-reveal:hover {
+    transform: none;
+  }
+}
+
+
+.fragments-container {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.fragments-base-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.fragments-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fragment-piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
+
+.card-layered-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Модальное окно большого размера */
+.modal-large {
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+/* Превью карты */
+.modal-preview-container {
+  margin: 20px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.modal-card-preview {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: #0f0f1a;
+  overflow: hidden;
+}
+
+.modal-base-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.modal-fragments-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-fragment-piece {
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.modal-fragment-piece:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+.modal-preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-progress-badge {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 60px;
+  padding: 12px 24px;
+  text-align: center;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+}
+
+.modal-progress-percent {
+  font-size: 32px;
+  font-weight: bold;
+  color: #ffd700;
+  display: block;
+}
+
+.modal-progress-text {
+  font-size: 14px;
+  color: #fff;
+}
+
+/* Сетка фрагментов */
+.fragments-grid-container {
+  margin-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+}
+
+.fragments-grid-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fragments-grid-hint {
+  font-size: 12px;
+  color: #888;
+  font-weight: normal;
+}
+
+.fragments-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.fragment-grid-item {
+  position: relative;
+  aspect-ratio: 1;
+  background: #2a2a3e;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.fragment-grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.fragment-owned {
+  border-color: #4caf50;
+  background: #1a3a1a;
+}
+
+.fragment-missing {
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+
+.fragment-grid-preview {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.fragment-grid-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fragment-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+}
+
+.fragment-placeholder-icon {
+  font-size: 24px;
+  opacity: 0.5;
+}
+
+.fragment-grid-number {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.fragment-owned-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #4caf50;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Детальный просмотр фрагмента */
+.fragment-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: fadeIn 0.2s ease;
+}
+
+.fragment-detail-content {
+  background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+.fragment-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.fragment-detail-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.fragment-detail-preview {
+  margin: 20px 0;
+  aspect-ratio: 1;
+  background: #0f0f1a;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fragment-detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fragment-detail-placeholder {
+  text-align: center;
+  padding: 40px;
+}
+
+.placeholder-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.fragment-find-btn {
+  margin-top: 16px;
+  padding: 8px 16px;
+  background: #ffd700;
+  border: none;
+  border-radius: 8px;
+  color: #1a1a2e;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
